@@ -75,8 +75,8 @@ public class SOOPChatUtils {
                     channel.get("BJID").getAsString(),
                     String.valueOf(channel.get("CHPT").getAsInt() + 1)
             );
-        } catch (Exception e) {
-            throw new SOOPChatException("Error occurred while getting player live information", e);
+        } catch (Exception ignored) {
+            return null;
         }
     }
 
