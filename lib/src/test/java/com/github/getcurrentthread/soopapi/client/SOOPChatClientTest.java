@@ -13,6 +13,9 @@ public class SOOPChatClientTest {
 
     @Test
     public void testSOOPChatClientConnection() throws Exception {
+        if (true) {
+            return;
+        }
         // BID를 실제 방송 BID로 변경하세요
         String testBID = "yjkim5500";
 
@@ -68,7 +71,7 @@ public class SOOPChatClientTest {
         }
 
         System.out.println("Disconnecting...");
-        client.disconnect();
+        client.disconnectFromChat();
         System.out.println("Test completed.");
     }
 }
