@@ -26,7 +26,7 @@ public class SOOPChatClient implements AutoCloseable {
     public SOOPChatClient(SOOPChatConfig config) {
         this.config = config;
         this.observers = new CopyOnWriteArrayList<>();
-        this.scheduler = Executors.newScheduledThreadPool(1);
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
         MessageDispatcher messageDispatcher = new MessageDispatcher(new DefaultMessageDecoderFactory().createDecoders());
         WebSocketListener listener = new WebSocketListener(messageDispatcher);
         this.webSocketManager = new WebSocketManager(config, config.getSSLContext(), scheduler, listener);
@@ -67,22 +67,16 @@ public class SOOPChatClient implements AutoCloseable {
         }
     }
 
-    public void disconnect() {
-        webSocketManager.disconnect();
-        scheduler.shutdown();
-        try {
-            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
-                scheduler.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            LOGGER.log(Level.WARNING, "Interrupted while waiting for scheduler shutdown", e);
-            Thread.currentThread().interrupt();
-        }
+    public CompletableFuture<Void> disconnectFromChat() {
+        return CompletableFuture.runAsync(() -> {
+            webSocketManager.disconnect();
+        });
     }
 
     @Override
     public void close() {
-        disconnect();
+        disconnectFromChat();
+        scheduler.shutdownNow();
     }
 
     public boolean isConnected() {
@@ -91,5 +85,9 @@ public class SOOPChatClient implements AutoCloseable {
 
     public String getBid() {
         return config.getBid();
+    }
+
+    public String getBno() {
+        return config.getBno();
     }
 }
