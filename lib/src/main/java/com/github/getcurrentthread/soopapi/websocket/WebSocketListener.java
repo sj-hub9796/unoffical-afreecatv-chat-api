@@ -21,7 +21,6 @@ public class WebSocketListener implements WebSocket.Listener {
 
     @Override
     public void onOpen(WebSocket webSocket) {
-        LOGGER.info("WebSocket connection opened");
         webSocket.request(1);
     }
 
@@ -59,7 +58,6 @@ public class WebSocketListener implements WebSocket.Listener {
 
     @Override
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-        LOGGER.log(Level.INFO, "WebSocket connection closed: {0}", reason);
         return null;
     }
 }
