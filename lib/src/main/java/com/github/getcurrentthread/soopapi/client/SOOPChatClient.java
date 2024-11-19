@@ -7,6 +7,7 @@ import com.github.getcurrentthread.soopapi.exception.SOOPChatException;
 import com.github.getcurrentthread.soopapi.model.ChannelInfo;
 import com.github.getcurrentthread.soopapi.model.Message;
 import com.github.getcurrentthread.soopapi.util.SOOPChatUtils;
+import com.github.getcurrentthread.soopapi.util.SchedulerManager;
 import com.github.getcurrentthread.soopapi.websocket.WebSocketListener;
 import com.github.getcurrentthread.soopapi.websocket.WebSocketManager;
 
@@ -26,7 +27,7 @@ public class SOOPChatClient implements AutoCloseable {
     public SOOPChatClient(SOOPChatConfig config) {
         this.config = config;
         this.observers = new CopyOnWriteArrayList<>();
-        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        this.scheduler = SchedulerManager.getScheduler();
         MessageDispatcher messageDispatcher = new MessageDispatcher(new DefaultMessageDecoderFactory().createDecoders());
         WebSocketListener listener = new WebSocketListener(messageDispatcher);
         this.webSocketManager = new WebSocketManager(config, config.getSSLContext(), scheduler, listener);
@@ -76,7 +77,7 @@ public class SOOPChatClient implements AutoCloseable {
     @Override
     public void close() {
         disconnectFromChat();
-        scheduler.shutdownNow();
+        SchedulerManager.releaseScheduler();
     }
 
     public boolean isConnected() {
