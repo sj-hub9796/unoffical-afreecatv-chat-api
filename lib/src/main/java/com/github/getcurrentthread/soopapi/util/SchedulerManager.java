@@ -5,7 +5,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SchedulerManager {
-    private static final ScheduledExecutorService SHARED_SCHEDULER = Executors.newScheduledThreadPool(8);
+
+    private static final int processors = Runtime.getRuntime().availableProcessors();
+    private static final int corePoolSize = Math.max(1, processors / 2);
+    private static final ScheduledExecutorService SHARED_SCHEDULER = Executors.newScheduledThreadPool(corePoolSize);
     private static final AtomicInteger clientCount = new AtomicInteger(0);
 
     public static ScheduledExecutorService getScheduler() {
