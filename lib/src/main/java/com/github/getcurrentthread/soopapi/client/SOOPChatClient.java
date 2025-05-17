@@ -183,6 +183,15 @@ public class SOOPChatClient implements AutoCloseable {
         return config.getBid();
     }
 
+    /**
+     * 방송인 BNO를 반환합니다.
+     *
+     * @return 방송인 BNO
+     */
+    public String getBno() {
+        return config.getBno();
+    }
+
     /** 연결 상태 정보를 제공하는 클래스 */
     public static class ConnectionStatus {
         private final boolean connected;
