@@ -146,23 +146,26 @@ public class SOOPChatClient implements AutoCloseable {
     }
 
     /** 현재 연결을 해제합니다. */
-    public void disconnect() {
+    public CompletableFuture<Void> disconnectFromChat() {
         if (!isConnected) {
-            return;
+            CompletableFuture.completedFuture(null);
         }
 
-        try {
-            connectionManager.disconnect(config.getBid()).join();
-            isConnected = false;
-            connection = null;
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error during disconnect", e);
-        }
+        return CompletableFuture.runAsync(
+                () -> {
+                    try {
+                        connectionManager.disconnect(config.getBid()).join();
+                        isConnected = false;
+                        connection = null;
+                    } catch (Exception e) {
+                        LOGGER.log(Level.WARNING, "Error during disconnect", e);
+                    }
+                });
     }
 
     @Override
     public void close() {
-        disconnect();
+        disconnectFromChat();
     }
 
     /**
