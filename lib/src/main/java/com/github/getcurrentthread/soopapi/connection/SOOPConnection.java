@@ -75,6 +75,10 @@ public class SOOPConnection {
                                             ? config.getBno()
                                             : SOOPChatUtils.getBnoFromBid(config.getBid());
 
+                            if (bno == null) {
+                                throw new ConnectionException("BNO가 유효하지 않습니다.");
+                            }
+
                             channelInfo = SOOPChatUtils.getPlayerLive(bno, config.getBid());
                             LOGGER.info("채널 정보 수신됨: " + channelInfo);
 

@@ -49,7 +49,7 @@ public class SOOPChatUtils {
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) {
-                throw new SOOPChatException("HTTP 요청 실패. 상태 코드: " + response.statusCode());
+                return null;
             }
 
             String responseBody = response.body();
@@ -70,12 +70,10 @@ public class SOOPChatUtils {
                     return altMatcher.group(1);
                 }
 
-                throw new SOOPChatException("BNO를 가져오지 못했습니다. 방송중이 아니거나 오류가 발생했습니다.");
+                return null;
             }
-        } catch (SOOPChatException e) {
-            throw e; // 사용자 정의 예외는 그대로 전달
         } catch (Exception e) {
-            throw new SOOPChatException("BID로부터 BNO를 가져오는 중 오류 발생", e);
+            return null;
         }
     }
 
